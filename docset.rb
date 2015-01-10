@@ -145,10 +145,8 @@ class DocsetBuilder
     lines = []
     File.open(path) do |f|
       while line = f.gets()
-        # Rewrite assets path
+        # Rewrite absolute paths
         line.gsub!(/\/assets\//, '../../assets/')
-
-        # Rewrite reference path
         line.gsub!(/\/reference\//, '../../reference/')
 
         lines << line
@@ -177,11 +175,16 @@ class DocsetBuilder
     File.open(path) do |f|
       while line = f.gets()
         # Rewrite font family
+        # Reference htmls use web fonts placed at http://assets.paperjs.org/,
+        # but cannot access them by Cross-Origin policy.
+        # So replace them with system default ones.
         line.gsub!(/font-family:.+sans-serif;/, FONT_FAMILY_SANS)
         line.gsub!(/font-family:.+monospace;/, FONT_FAMILY_MONO)
         line.gsub!(/font-family:.+";/, FONT_FAMILY_MISC)
 
         # Rewrite font size
+        # Default font size is largish for dash documentation
+        # so make them smaller
         line.gsub!(/((?:font-size|line-height):\s*)([0-9.]+)/) do |s|
           '%s%.2f' % [$1, ($2.to_f() * FONT_SIZE_FACTOR)]
         end
