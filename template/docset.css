@@ -1,0 +1,14 @@
+body {
+	padding: 0 30px;
+	width: auto;
+}
+nav {
+	display: none;
+}
+article {
+	margin: 0;
+	width: 100%;
+}
+aside {
+	display: none;
+}
