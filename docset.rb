@@ -10,6 +10,10 @@ REPOS_NAME = 'paperjs.github.io'
 REPOS_URL = "https://github.com/paperjs/#{REPOS_NAME}"
 DOCSET_DIR_NAME = 'Paperjs.docset'
 TEMPLATE_DIR_NAME = 'template'
+FONT_FAMILY_SANS = 'font-family: Verdana, sans-serif;'
+FONT_FAMILY_MONO = 'font-family: Menlo, monospace;'
+FONT_FAMILY_MISC = FONT_FAMILY_SANS
+FONT_SIZE_FACTOR = 0.9
 
 class Repository
 	def initialize(home_dir)
@@ -129,6 +133,10 @@ class DocsetBuilder
 		@docset.each_document('html') do |path|
 			rewrite_html(path)
 		end
+
+		@docset.each_document('css') do |path|
+			rewrite_css(path)
+		end
 	end
 
 	def rewrite_html(path)
@@ -152,6 +160,36 @@ class DocsetBuilder
 			if lines[index].strip() == '</head>'
 				lines.insert(index, '<link rel="stylesheet" href="../../docset.css"/>')
 				break
+			end
+		end
+
+		File.open(path, 'w') do |f|
+			f.write(lines.join(''))
+		end
+
+		puts('done.')
+	end
+
+	def rewrite_css(path)
+		print("Formatting #{File.dirname(path)}...")
+
+		lines = []
+		File.open(path) do |f|
+			while line = f.gets()
+				# Rewrite font family
+				line.gsub!(/font-family:.+sans-serif;/, FONT_FAMILY_SANS)
+				line.gsub!(/font-family:.+monospace;/, FONT_FAMILY_MONO)
+				line.gsub!(/font-family:.+";/, FONT_FAMILY_MISC)
+
+				# Rewrite font size
+				line.gsub!(/((?:font-size|line-height):\s*)([0-9.]+)/) do |s|
+					'%s%.2f' % [$1, ($2.to_f() * FONT_SIZE_FACTOR)]
+				end
+				line.gsub!(/(font-size:\s*)([0-9.]+)/) do |s|
+					'%s%.2f' % [$1, ($2.to_f() * FONT_SIZE_FACTOR)]
+				end
+
+				lines << line
 			end
 		end
 
