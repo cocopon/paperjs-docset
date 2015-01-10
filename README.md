@@ -19,15 +19,15 @@ System Requirements
 Generating Docset
 -----------------
 1. Install required gems if not installed yet:
-```
-$ gem install nokogiri sqlite3
-```
+	```
+	$ gem install nokogiri sqlite3
+	```
 
 2. Execute a generator script:
-```
-$ cd path/to/paperjs-docset
-$ ruby docset.rb
-```
+	```
+	$ cd path/to/paperjs-docset
+	$ ruby docset.rb
+	```
 
 
 
