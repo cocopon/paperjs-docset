@@ -9,8 +9,8 @@ System Requirements
 -------------------
 - Ruby 2.0 and above
 - RubyGems
-  - Nokogiri
-  - Sqlite3
+  - nokogiri
+  - sqlite3
 - Git
 
 
